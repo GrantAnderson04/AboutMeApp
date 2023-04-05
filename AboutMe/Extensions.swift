@@ -35,3 +35,13 @@ extension UIButton {
         self.imageView?.layer.cornerRadius = 20
     }
 }
+
+
+extension UIButton {
+    func colorButton(Color: UIColor) {
+//        let label = UILabel()
+//        label.text = colorTitle
+//        self.addSubview(label)
+        self.backgroundColor = Color
+    }
+}

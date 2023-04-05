@@ -7,20 +7,17 @@
 import UIKit
 
 class ProfileViewController: UIViewController {
+   var testColor : UIColor = .lightGray
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let newView = UIView()
-        newView.backgroundColor = UIColor.red
+        newView.backgroundColor = .lightGray
         view.addSubview(newView)
-        
-        //           newView.translatesAutoresizingMaskIntoConstraints = false
-        //        let constraintss = [
-        //        newView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-        //        newView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-        //           newView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-        //            newView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        //            ]
-        //           NSLayoutConstraint.activate(constraintss)
+        viewForPictures.backgroundColor = testColor
+            
+
         // MARK: BACKGROUND VIEW
         viewForPictures.translatesAutoresizingMaskIntoConstraints = false
         let constraintPictures = [
@@ -33,7 +30,8 @@ class ProfileViewController: UIViewController {
         NSLayoutConstraint.activate(constraintPictures)
         
         // MARK: HEADER
-        header.translatesAutoresizingMaskIntoConstraints = false
+        
+                header.translatesAutoresizingMaskIntoConstraints = false
         let headerConstraints = [
             //        header.bottomAnchor.constraint(equalTo: viewForPictures.topAnchor),
             header.topAnchor.constraint(equalTo: view.topAnchor),
@@ -43,18 +41,15 @@ class ProfileViewController: UIViewController {
             
         ]
         NSLayoutConstraint.activate(headerConstraints)
-        //        if let image = UIImage(named: "Grant") {
-        //            header.backgroundColor = UIColor(patternImage: image)
-        //            header.contentMode = .scaleAspectFill
-        //        }
+        
         
         // MARK: Profile Picture view
-        
         
         let profilePicture = UIImageView()
         profilePicture.image = UIImage(named: "Grant")
         profilePicture.contentMode = .scaleToFill
         profilePicture.translatesAutoresizingMaskIntoConstraints = false
+        profilePicture.backgroundColor = .lightGray
         
         let profilePictureConstraints = [
             profilePicture.leadingAnchor.constraint(equalTo: header.leadingAnchor),
@@ -65,6 +60,20 @@ class ProfileViewController: UIViewController {
         header.addSubview(profilePicture)
         NSLayoutConstraint.activate(profilePictureConstraints)
         
+        
+        let headerLabel = UILabel()
+        profilePicture.addSubview(headerLabel)
+        headerLabel.text = "Grant Anderson"
+        headerLabel.textColor = .white
+        headerLabel.font = UIFont(name: "arial", size: 40)
+        let headerLabelConstraints = [
+            headerLabel.bottomAnchor.constraint(equalTo: profilePicture.bottomAnchor, constant: -10),
+            headerLabel.leadingAnchor.constraint(equalTo: profilePicture.leadingAnchor, constant: 10),
+//            headerLabel.trailingAnchor.constraint(equalTo: profilePicture.trailingAnchor, constant: 10),
+//            headerLabel.topAnchor.constraint(equalTo: profilePicture.topAnchor, constant: 10)
+            ]
+        headerLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate(headerLabelConstraints)
         
         // MARK: Family Button
         
@@ -121,7 +130,7 @@ class ProfileViewController: UIViewController {
             rect3.centerXAnchor.constraint(equalTo: viewForPictures.centerXAnchor, constant: 95),
             rect3.trailingAnchor.constraint(equalTo: viewForPictures.trailingAnchor, constant: -10)]
         rect3.layer.cornerRadius = 20
-        rect3.backgroundColor = .blue
+        rect3.backgroundColor = .white
         rect3.imageInButton(nameOfImage: "Game")
         rect3.labelInMiddle(nameOfLabel: "Game", labelColor: .black)
         rect3.addTarget(self, action: #selector(self.rect3ButtonTapped(sender:)), for: .touchUpInside)
@@ -225,5 +234,9 @@ class ProfileViewController: UIViewController {
         let backgroundViewController = BackgroundViewController()
         navigationController?.pushViewController(backgroundViewController, animated: true)
     }
+    
+//    @objc func changeBackgroundColor(sender : UIButton) {
+//        profilePi
+//    }
 
 }
