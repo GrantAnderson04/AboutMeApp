@@ -14,15 +14,15 @@ class SocialsViewController: UIViewController {
         let header = UIView()
         view.addSubview(header)
         header.translatesAutoresizingMaskIntoConstraints = false
-let headerConstraints = [
-    //        header.bottomAnchor.constraint(equalTo: viewForPictures.topAnchor),
-    header.topAnchor.constraint(equalTo: view.topAnchor),
-    header.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-    header.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-    header.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height / 4),
-    
-]
-NSLayoutConstraint.activate(headerConstraints)
+        let headerConstraints = [
+            //        header.bottomAnchor.constraint(equalTo: viewForPictures.topAnchor),
+            header.topAnchor.constraint(equalTo: view.topAnchor),
+            header.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            header.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            header.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height / 4),
+            
+        ]
+        NSLayoutConstraint.activate(headerConstraints)
         
         let profilePicture = UIImageView()
         profilePicture.image = UIImage(named: "Grant")
@@ -48,9 +48,9 @@ NSLayoutConstraint.activate(headerConstraints)
         let headerLabelConstraints = [
             headerLabel.bottomAnchor.constraint(equalTo: profilePicture.bottomAnchor, constant: -10),
             headerLabel.leadingAnchor.constraint(equalTo: profilePicture.leadingAnchor, constant: 10),
-//            headerLabel.trailingAnchor.constraint(equalTo: profilePicture.trailingAnchor, constant: 10),
-//            headerLabel.topAnchor.constraint(equalTo: profilePicture.topAnchor, constant: 10)
-            ]
+            //            headerLabel.trailingAnchor.constraint(equalTo: profilePicture.trailingAnchor, constant: 10),
+            //            headerLabel.topAnchor.constraint(equalTo: profilePicture.topAnchor, constant: 10)
+        ]
         headerLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate(headerLabelConstraints)
         

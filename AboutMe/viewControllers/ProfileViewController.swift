@@ -85,7 +85,7 @@ class ProfileViewController: UIViewController {
         let rect1Contraints = [
             rect1.leftAnchor.constraint(equalTo: viewForPictures.leftAnchor, constant: 10),
             rect1.bottomAnchor.constraint(equalTo: viewForPictures.bottomAnchor, constant: -20),
-            rect1.centerXAnchor.constraint(equalTo: viewForPictures.centerXAnchor, constant: -95)]
+            rect1.trailingAnchor.constraint(equalTo: viewForPictures.centerXAnchor, constant: -5)]
         rect1.layer.cornerRadius = 20
         
         rect1.imageInButton(nameOfImage: "owls")
@@ -104,7 +104,7 @@ class ProfileViewController: UIViewController {
         let rect2Contraints = [
             rect2.leftAnchor.constraint(equalTo: viewForPictures.leftAnchor, constant: 10),
             rect2.bottomAnchor.constraint(equalTo: rect1.topAnchor, constant: -10),
-            rect2.centerXAnchor.constraint(equalTo: viewForPictures.centerXAnchor, constant: -95),
+            rect2.trailingAnchor.constraint(equalTo: viewForPictures.centerXAnchor, constant: -5),
             rect2.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 10),
             rect2.widthAnchor.constraint(equalToConstant: 200),
             rect2.heightAnchor.constraint(equalToConstant: 200)]
@@ -127,7 +127,7 @@ class ProfileViewController: UIViewController {
         let rect3Constraints = [
             rect3.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 250),
             rect3.bottomAnchor.constraint(equalTo: viewForPictures.bottomAnchor, constant: -20),
-            rect3.centerXAnchor.constraint(equalTo: viewForPictures.centerXAnchor, constant: 95),
+            rect3.leadingAnchor.constraint(equalTo: viewForPictures.centerXAnchor, constant: 5),
             rect3.trailingAnchor.constraint(equalTo: viewForPictures.trailingAnchor, constant: -10)]
         rect3.layer.cornerRadius = 20
         rect3.backgroundColor = .white
@@ -146,7 +146,7 @@ class ProfileViewController: UIViewController {
         let rect4Constraints = [
             rect4.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 10),
             rect4.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: 240),
-            rect4.centerXAnchor.constraint(equalTo: viewForPictures.centerXAnchor, constant: 95),
+            rect4.leadingAnchor.constraint(equalTo: viewForPictures.centerXAnchor, constant: 5),
             rect4.trailingAnchor.constraint(equalTo: viewForPictures.trailingAnchor, constant: -10)]
         rect4.layer.cornerRadius = 20
         rect4.backgroundColor = .brown
@@ -165,7 +165,7 @@ class ProfileViewController: UIViewController {
         let rect5Contraints = [
             rect5.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 10),
             rect5.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: 180),
-            rect5.centerXAnchor.constraint(equalTo: viewForPictures.centerXAnchor, constant: 95),
+            rect5.leadingAnchor.constraint(equalTo: viewForPictures.centerXAnchor, constant: 5),
             rect5.trailingAnchor.constraint(equalTo: viewForPictures.trailingAnchor, constant: -10)]
         rect5.layer.cornerRadius = 20
         rect5.backgroundColor = .cyan
@@ -184,7 +184,7 @@ class ProfileViewController: UIViewController {
         let rect6Contraints = [
             rect6.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 10),
             rect6.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: 120),
-            rect6.centerXAnchor.constraint(equalTo: viewForPictures.centerXAnchor, constant: 95),
+            rect6.leadingAnchor.constraint(equalTo: viewForPictures.centerXAnchor, constant: 5),
             rect6.trailingAnchor.constraint(equalTo: viewForPictures.trailingAnchor, constant: -10)]
         rect6.layer.cornerRadius = 20
         rect6.backgroundColor = .gray

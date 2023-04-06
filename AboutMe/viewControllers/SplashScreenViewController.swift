@@ -41,7 +41,7 @@ class SplashScreenViewController: UIViewController {
         stickImages = createImageArray(total: 14, imagePrefix: "stick")
         
         animate(imageView: stickmanImageView, images: stickImages)
-        stickmanImageView.image = UIImage(named: "stick13"); DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        stickmanImageView.image = UIImage(named: "stick13"); DispatchQueue.main.asyncAfter(deadline: .now() + 0) {
             self.performSegue(withIdentifier: "OpenMenu", sender: nil)
             
             

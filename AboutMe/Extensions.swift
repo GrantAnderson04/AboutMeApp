@@ -8,14 +8,10 @@
 import Foundation
 import UIKit
 
-class labelInButton {
-    
-}
-
 
 extension UIButton {
     func labelInMiddle(nameOfLabel: String, labelColor: UIColor) {
-    let label = UILabel()
+        let label = UILabel()
         label.text = nameOfLabel
         label.textColor = labelColor
         label.font = UIFont(name: "DIN Alternate", size: 32)
