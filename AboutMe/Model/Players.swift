@@ -9,7 +9,9 @@ import Foundation
 import UIKit
 
 class Player {
-    
+    var playerRolls = 3
+    var playerScore = 0
+    var playerName: String = ""
 }
 
 

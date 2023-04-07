@@ -10,7 +10,9 @@ import UIKit
 
 class GameViewController: ViewController {
     
+    
     let dice = [Die(numberOfSides: 6), Die(numberOfSides: 6), Die(numberOfSides: 6)]
+    var playerTotal = [Player(), Player(), Player(), Player(), Player()]
     
     let dice1Image = UIImageView()
     let dice2Image = UIImageView()
@@ -35,12 +37,17 @@ class GameViewController: ViewController {
     var player1Score = 0
     var player2Score = 0
     
+    var counterForEnd = 0
+    
+    
+    var currentPlayer: Player = Player()
+    var player = Player()
     // alert for when game ends
     
     var dialogMessage = UIAlertController(title: "Game Over", message: "", preferredStyle: .alert)
     
     let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in print("Ok button tapped") })
-        
+    
     
     
     //MARK: Dice Roller
@@ -57,19 +64,28 @@ class GameViewController: ViewController {
         dice3Image.image = UIImage(named: "die\(dice[2].value)")
     }
     
+    //MARK: Name adder
+    
+    func nameAdder() {
+        for Index in 0...playerTotal.count {
+            currentPlayer.playerName = "player \(Index)"
+            nextPlayer()
+        }
+    }
+    
     func score(_ die1: Int, _ die2: Int, _ die3: Int) {
         
     }
     
     func getDoublesScore() -> Int {
         for (index, die) in dice.enumerated() {
-
+            
             for (checkIndex, checkDie) in dice.enumerated() {
                 if die.value == checkDie.value && index != checkIndex {
                     return (die.value * 10) + checkDie.value
                 }
             }
-
+            
         }
         return 0
     }
@@ -82,60 +98,111 @@ class GameViewController: ViewController {
     }
     
     func rollsLeft() {
-        if player1Rolls > 0 {
-            player1Rolls -= 1
-            player1RollsLabel.text = "Rolls left: \(player1Rolls)"
-            // triple scoring
-            if player1Score < getTriplesScore() {
-                player1Score = getTriplesScore()
-                player1Label.text = "Player 1 Score: \(player1Score)"
-            }
-            //double scoring
-            if player1Score < getDoublesScore() {
-                player1Score = getDoublesScore()
-                player1Label.text = "Player 1 Score: \(player1Score)"
-            }
-        } else if player2Rolls > 0 {
-            player2Rolls -= 1
-            player2RollsLabel.text = "Rolls left: \(player2Rolls)"
-            //triples scoring
-            if player2Score < getTriplesScore() {
-                player2Score = getTriplesScore()
-                player2Label.text = "Player 1 Score: \(player1Score)"
-            }
-            //doubles scoring
-            if player2Score < getDoublesScore() {
-                player2Score = getDoublesScore()
-                player2Label.text = "Player 2 Score: \(player2Score)"
-            }
-            // add score here
-        } else if player1Rolls == 0 && player2Rolls == 0 {
-            self.present(dialogMessage, animated: true, completion: nil)
+        
+        if  currentPlayer.playerRolls > 0 {
+            currentPlayer.playerRolls -= 1
+            player1RollsLabel.text = "Rolls left: \(currentPlayer.playerRolls)"
+        } else {
+            nextPlayer()
+            player1RollsLabel.text = "Rolls left: \(currentPlayer.playerRolls)"
             
-
+        }
+    }
+    
+    func nextPlayer() {
+        var tempPlayer = playerTotal[0]
+        playerTotal.remove(at: 0)
+        currentPlayer = playerTotal[0]
+        playerTotal.append(tempPlayer)
+        player1Label.text = "\(currentPlayer.playerName) Score: \(currentPlayer.playerScore)"
+    }
+    
+    func addScoreToPlayer() {
+        if currentPlayer.playerScore < getTriplesScore() {
+            currentPlayer.playerScore = getTriplesScore()
+            player1Label.text = "\(currentPlayer.playerName) Score: \(currentPlayer.playerScore)"
+        }
+        if currentPlayer.playerScore < getDoublesScore() {
+            currentPlayer.playerScore = getDoublesScore()
+            player1Label.text = "\(currentPlayer.playerName) Score: \(currentPlayer.playerScore)"
+        } else {
+            
         }
         
     }
     
+    func yaya() {
+        if endGameChecker() == counterForEnd{
+            self.present(dialogMessage, animated: true, completion: nil)
+        }
+    }
     
+    func endGameChecker() -> Int {
+        var counter = 0
+        for _ in 0..<playerTotal.count {
+            counter += 4
+            
+        }
+        return counter
+    }
+    
+    func tappedCounter() {
+        counterForEnd += 1
+    }
+    
+//    func endGame() {
+//        for Index in 0...playerTotal.count {
+//            var num = 0
+//            num += 1
+//            if currentPlayer.playerRolls == 0 {
+//                nextPlayer()
+//            } else {
+//                break
+//            }
+//            if Index == num {
+//                self.present(dialogMessage, animated: true, completion: nil)
+//            }
+//
+//        }
+//
+//    }
+    
+    @objc func rollDieButton(sender : UIButton) {
+        diceRoller()
+        addScoreToPlayer()
+        rollsLeft()
+        tappedCounter()
+        yaya()
+    }
+    
+    @objc func passButton(sender : UIButton) {
+        
+    }
+    //MARK: ViewDidLoad
     override func viewDidLoad(){
+        //        playerTotal[0].playerName = "PLAYER 1"
+        //        playerTotal[1].playerName = "PLAYER 2"
+        //        playerTotal[2].playerName = "PLAYER 3"
+        currentPlayer = playerTotal[0]
         view.accessibilityIdentifier = "GameViewController"
         view.backgroundColor = .white
         
         dialogMessage.addAction(ok)
         
+        nameAdder()
+        
         //MARK: Images for dice
         dice1Image.image = UIImage(named: "die1")
         dice2Image.image = UIImage(named: "die1")
         dice3Image.image = UIImage(named: "die1")
-
+        
         view.addSubview(dice1Image)
         let dice1Constraints = [
             dice1Image.centerYAnchor.constraint(equalTo: view.centerYAnchor , constant: -80),
             dice1Image.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             dice1Image.widthAnchor.constraint(equalToConstant: 100),
             dice1Image.heightAnchor.constraint(equalToConstant: 100)
-]
+        ]
         NSLayoutConstraint.activate(dice1Constraints)
         dice1Image.translatesAutoresizingMaskIntoConstraints = false
         
@@ -145,7 +212,7 @@ class GameViewController: ViewController {
             dice2Image.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             dice2Image.widthAnchor.constraint(equalToConstant: 100),
             dice2Image.heightAnchor.constraint(equalToConstant: 100)
-]
+        ]
         NSLayoutConstraint.activate(dice2Constraints)
         dice2Image.translatesAutoresizingMaskIntoConstraints = false
         
@@ -155,7 +222,7 @@ class GameViewController: ViewController {
             dice3Image.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             dice3Image.widthAnchor.constraint(equalToConstant: 100),
             dice3Image.heightAnchor.constraint(equalToConstant: 100)
-]
+        ]
         NSLayoutConstraint.activate(dice3Constraints)
         dice3Image.translatesAutoresizingMaskIntoConstraints = false
         
@@ -173,13 +240,13 @@ class GameViewController: ViewController {
             rollButton.widthAnchor.constraint(equalToConstant: 100)]
         NSLayoutConstraint.activate(rollButtonConstraints)
         rollButton.addTarget(self, action: #selector(self.rollDieButton(sender:)), for: .touchUpInside)
-
+        
         rollButton.translatesAutoresizingMaskIntoConstraints = false
         
         //MARK: PlayerLabels / Scores
         player1Label.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(player1Label)
-        player1Label.text = "Player 1 Score: \(player1Score)"
+        player1Label.text = "\(currentPlayer.playerName) Score: \(currentPlayer.playerScore)"
         player1Label.textColor = .black
         player1Label.font = UIFont(name: "arial", size: 20)
         let player1LabelContraints = [
@@ -203,7 +270,7 @@ class GameViewController: ViewController {
         
         
         view.addSubview(player1RollsLabel)
-        player1RollsLabel.text = "Rolls left: \(player1Rolls)"
+        player1RollsLabel.text = "Rolls left: \(currentPlayer.playerRolls)"
         player1RollsLabel.textColor = .black
         player1RollsLabel.font = UIFont(name: "arial", size: 20)
         let player1RollsLabelConstraints = [
@@ -221,13 +288,10 @@ class GameViewController: ViewController {
             player2RollsLabel.topAnchor.constraint(equalTo: player2Label.bottomAnchor)]
         player2RollsLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate(player2RollsLabelConstraints)
-    
+        
     }
     
-    @objc func rollDieButton(sender : UIButton) {
-        diceRoller()
-        rollsLeft()
-    }
+    
     
 }
 
