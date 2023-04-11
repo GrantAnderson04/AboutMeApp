@@ -41,3 +41,13 @@ extension UIButton {
         self.backgroundColor = Color
     }
 }
+
+extension Array {
+    var toPrint: String  {
+        var str = ""
+        for element in self {
+            str += "\(element) "
+        }
+        return str
+    }
+}

@@ -12,7 +12,9 @@ class GameViewController: ViewController {
     
     
     let dice = [Die(numberOfSides: 6), Die(numberOfSides: 6), Die(numberOfSides: 6)]
-    var playerTotal = [Player(), Player(), Player(), Player(), Player()]
+    var playerTotal = [Player(), Player()]
+    
+    let playersInGameText = UITextField()
     
     let dice1Image = UIImageView()
     let dice2Image = UIImageView()
@@ -38,7 +40,10 @@ class GameViewController: ViewController {
     var player2Score = 0
     
     var counterForEnd = 0
-    
+    var winnerPoints = 0
+    var winningPlayerName = ""
+    var tiedPlayersNames = [String]()
+    var tiedPlayersScore = 0
     
     var currentPlayer: Player = Player()
     var player = Player()
@@ -47,9 +52,6 @@ class GameViewController: ViewController {
     var dialogMessage = UIAlertController(title: "Game Over", message: "", preferredStyle: .alert)
     
     let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in print("Ok button tapped") })
-    
-    
-    
     //MARK: Dice Roller
     
     func diceRoller() {
@@ -68,14 +70,12 @@ class GameViewController: ViewController {
     
     func nameAdder() {
         for Index in 0...playerTotal.count {
-            currentPlayer.playerName = "player \(Index)"
+            currentPlayer.playerName = "Player \(Index)"
             nextPlayer()
         }
     }
     
-    func score(_ die1: Int, _ die2: Int, _ die3: Int) {
-        
-    }
+    //MARK: Score functions
     
     func getDoublesScore() -> Int {
         for (index, die) in dice.enumerated() {
@@ -83,9 +83,10 @@ class GameViewController: ViewController {
             for (checkIndex, checkDie) in dice.enumerated() {
                 if die.value == checkDie.value && index != checkIndex {
                     return (die.value * 10) + checkDie.value
+                } else {
+                    
                 }
             }
-            
         }
         return 0
     }
@@ -97,12 +98,21 @@ class GameViewController: ViewController {
         return 0
     }
     
+//    func getStraightScore() -> Int {
+//
+//    }
+    
+    //MARK: Rolls left
+    
     func rollsLeft() {
         
         if  currentPlayer.playerRolls > 0 {
             currentPlayer.playerRolls -= 1
             player1RollsLabel.text = "Rolls left: \(currentPlayer.playerRolls)"
         } else {
+            dice1Image.image = UIImage(named: "die1")
+            dice2Image.image = UIImage(named: "die1")
+            dice3Image.image = UIImage(named: "die1")
             nextPlayer()
             player1RollsLabel.text = "Rolls left: \(currentPlayer.playerRolls)"
             
@@ -110,7 +120,7 @@ class GameViewController: ViewController {
     }
     
     func nextPlayer() {
-        var tempPlayer = playerTotal[0]
+        let tempPlayer = playerTotal[0]
         playerTotal.remove(at: 0)
         currentPlayer = playerTotal[0]
         playerTotal.append(tempPlayer)
@@ -131,8 +141,10 @@ class GameViewController: ViewController {
         
     }
     
-    func yaya() {
+    func endGame() {
         if endGameChecker() == counterForEnd{
+            winner()
+            
             self.present(dialogMessage, animated: true, completion: nil)
         }
     }
@@ -146,50 +158,102 @@ class GameViewController: ViewController {
         return counter
     }
     
+    func winner() {
+        if currentPlayer.playerScore > winnerPoints {
+            winnerPoints = currentPlayer.playerScore
+            winningPlayerName = currentPlayer.playerName
+            tiedPlayersNames.removeAll()
+            tiedPlayersScore = winnerPoints
+            tiedPlayersNames.append(winningPlayerName)
+        }else if currentPlayer.playerScore == winnerPoints && !tiedPlayersNames.contains(currentPlayer.playerName) {
+            tiedPlayersNames.append(",")
+            tiedPlayersNames.append(currentPlayer.playerName)
+            tiedPlayersScore = currentPlayer.playerScore
+        }
+        if tiedPlayersScore == winnerPoints && tiedPlayersNames.count < 2 {
+            dialogMessage.message = "\(winningPlayerName) won with a score of \(winnerPoints)"
+
+        } else {
+            
+            dialogMessage.message = "\(tiedPlayersNames.toPrint) tied with a score of \(tiedPlayersScore)"
+
+        }
+    }
+    
     func tappedCounter() {
         counterForEnd += 1
     }
     
-//    func endGame() {
-//        for Index in 0...playerTotal.count {
-//            var num = 0
-//            num += 1
-//            if currentPlayer.playerRolls == 0 {
-//                nextPlayer()
-//            } else {
-//                break
-//            }
-//            if Index == num {
-//                self.present(dialogMessage, animated: true, completion: nil)
-//            }
-//
-//        }
-//
-//    }
+    //MARK: Player counter alert
+    
+    func playerCountAlert() {
+       let playerAlert = UIAlertController(title: "How Many Robbers Are There", message: "Put total down below", preferredStyle: .alert)
+        playerAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
+            guard let field = playerAlert.textFields, field.count == 1 else {
+                return
+            }
+            let playerCountField = field[0]
+            guard let playerCount = playerCountField.text, !playerCount.isEmpty else {
+                print("Invalid entries")
+                return
+            }
+            let playerCountInt = Int(playerCount)
+            if playerCountInt! > 10 {
+                let lessPlayersAlert = UIAlertController(title: "Too many players must be below 10", message: "", preferredStyle: .alert)
+                lessPlayersAlert.addAction(UIAlertAction(title: "Ok", style: .default))
+                self.present(lessPlayersAlert, animated: true)
+                
+            } else {
+                for _ in 1...(playerCountInt ?? 0) {
+                    self.playerTotal.append(Player())
+                    print(playerCount)
+                    print(self.playerTotal)
+                }
+                self.playerTotal.removeLast()
+                self.playerTotal.removeLast()
+                self.nameAdder()
+            }
+        }))
+        playerAlert.addTextField { field in
+            field.placeholder = "Player Count"
+            field.returnKeyType = .continue
+            field.keyboardType = .numberPad
+        }
+        present(playerAlert, animated: true)
+    }
+    
+    
     
     @objc func rollDieButton(sender : UIButton) {
         diceRoller()
         addScoreToPlayer()
         rollsLeft()
+        winner()
         tappedCounter()
-        yaya()
+        endGame()
     }
     
-    @objc func passButton(sender : UIButton) {
-        
+    @objc func passButtonTapped(sender : UIButton) {
+        dice1Image.image = UIImage(named: "die1")
+        dice2Image.image = UIImage(named: "die1")
+        dice3Image.image = UIImage(named: "die1")
+        nextPlayer()
+        player1RollsLabel.text = "Rolls left: \(currentPlayer.playerRolls)"
     }
-    //MARK: ViewDidLoad
+    
+        //MARK: ViewDidLoad
+
     override func viewDidLoad(){
-        //        playerTotal[0].playerName = "PLAYER 1"
-        //        playerTotal[1].playerName = "PLAYER 2"
-        //        playerTotal[2].playerName = "PLAYER 3"
+        
+        playerCountAlert()
+
+        
         currentPlayer = playerTotal[0]
         view.accessibilityIdentifier = "GameViewController"
         view.backgroundColor = .white
         
         dialogMessage.addAction(ok)
         
-        nameAdder()
         
         //MARK: Images for dice
         dice1Image.image = UIImage(named: "die1")
@@ -240,8 +304,22 @@ class GameViewController: ViewController {
             rollButton.widthAnchor.constraint(equalToConstant: 100)]
         NSLayoutConstraint.activate(rollButtonConstraints)
         rollButton.addTarget(self, action: #selector(self.rollDieButton(sender:)), for: .touchUpInside)
-        
         rollButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        let passButton = UIButton()
+        view.addSubview(passButton)
+        passButton.setTitle("Pass", for: .normal)
+        passButton.backgroundColor = .black
+        passButton.layer.cornerRadius = 20
+        let passButtonConstraints = [
+            passButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            passButton.topAnchor.constraint(equalTo: rollButton.bottomAnchor, constant: 20),
+            passButton.heightAnchor.constraint(equalToConstant: 50),
+            passButton.widthAnchor.constraint(equalToConstant: 100)]
+        NSLayoutConstraint.activate(passButtonConstraints)
+        passButton.addTarget(self, action: #selector(self.passButtonTapped(sender:)), for: .touchUpInside)
+        passButton.translatesAutoresizingMaskIntoConstraints = false
         
         //MARK: PlayerLabels / Scores
         player1Label.translatesAutoresizingMaskIntoConstraints = false
